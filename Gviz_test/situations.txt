@@ -1,0 +1,8 @@
+chromosome	start	end	width	strand	feature	gene	exon	transcript	symbol
+chr1	980	999	1	+	utr5	A	ex1	txA	A
+chr1	1000	1020	1	+	protein_coding	A	ex1	txA	A
+chr1	1050	1080	41	+	protein_coding	A	ex2	txA	A
+chr1	1160	1240	1	+	protein_coding	A	ex3	txA	A
+chr1	1280	1290	11	+	protein_coding	A	ex4	txA	A
+chr1	1310	1325	16	+	protein_coding	A	ex5	txA	A
+chr1	1326	1340	15	+	utr3	A	ex5	txA	A
