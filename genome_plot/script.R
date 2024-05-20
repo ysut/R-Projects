@@ -13,6 +13,7 @@ BiocManager::install("XML")
 BiocManager::install(version = "3.19")
 BiocManager::install("Gviz")
 BiocManager::install("txdbmaker")
+BiocManager::install("GenomeInfoDbData")
 BiocManager::install("BSgenome.Hsapiens.UCSC.hg19")
 install.packages('openxlsx')
 
@@ -108,7 +109,7 @@ jakmip1_pos <- 6086572
 ubn1_pos    <- 4918905
 znf516_pos  <- 74082552
 nfe2l1_pos  <- 46134392
-  
+
 
 # Make GRanges object from gff3 file ===========================================
 
@@ -121,13 +122,13 @@ txdb
 # Ideogram
 itrack <- IdeogramTrack(
   genome = gen, chromosome = chr, cex = 0.8, bevel = 1, showId = FALSE
-  )
+)
 
 # Axis track
 axtrack <- GenomeAxisTrack(
   add35 = F, add53 = F, exponent = 0, fontcolor = "#383838", 
   fontsize = 16, lbaelPos = "below"
-  )
+)
 
 # Fetch gene information from UCSC
 refgenetrack <- UcscTrack(
@@ -136,7 +137,7 @@ refgenetrack <- UcscTrack(
   rstarts = "exonStarts", rends = "exonEnds", gene = "name", symbol = "name2",  
   transcript = "name", strand = "strand"
   chromosome = mecp2_chr, from = mecp2_from, to = mecp2_to, 
-  )
+)
 
 
 displayPars(refgenetrack) <- list(
@@ -154,7 +155,7 @@ ht = HighlightTrack(
   trackList = track_list, alpha = 0.5, inBackground = FALSE, width = 0,
   chromosome = mecp2_chr, start = mecp2_pos
   
-  )
+)
 
 
 plotTracks(list(ht, vartrack), from = pos - 20, to = pos + 20)
