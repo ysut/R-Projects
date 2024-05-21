@@ -30,7 +30,7 @@ axistrack <- GenomeAxisTrack(add35 = F, add53 = F, cex = 1,
                              fontcolor = "#383838")
 
 # Genes
-    <- UcscTrack(genome=gen, chromosome=chr, track="NCBI RefSeq", 
+ucscTrack1 <- UcscTrack(genome=gen, chromosome=chr, track="NCBI RefSeq", 
                    table = "refGene", from=from, to=to, rstarts="exonStarts", 
                    rends="exonEnds", trackType="GeneRegionTrack", 
                    gene="name", symbol="name", name="Genes",

@@ -15,6 +15,7 @@ BiocManager::install("Gviz")
 BiocManager::install("txdbmaker")
 BiocManager::install("GenomeInfoDbData")
 BiocManager::install("BSgenome.Hsapiens.UCSC.hg19")
+BiocManager::install("RMariaDB")
 install.packages('openxlsx')
 
 library(Gviz)
@@ -22,6 +23,7 @@ library(BSgenome.Hsapiens.UCSC.hg19)
 library(openxlsx)
 library(txdbmaker)
 library(rtracklayer)
+library(GenomicFeatures)
 
 options(Gviz.ucscUrl="http://genome-asia.ucsc.edu/cgi-bin/")
 
@@ -135,8 +137,8 @@ refgenetrack <- UcscTrack(
   genome = gen, trackType = "GeneRegionTrack", fill = "#665990", name = "MECP2",
   track = "NCBI RefSeq", table = "ncbiRefSeq",
   rstarts = "exonStarts", rends = "exonEnds", gene = "name", symbol = "name2",  
-  transcript = "name", strand = "strand"
-  chromosome = mecp2_chr, from = mecp2_from, to = mecp2_to, 
+  transcript = "name", strand = "strand",
+  chromosome = chr, from = from, to = to, 
 )
 
 
