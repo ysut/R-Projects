@@ -61,11 +61,18 @@ from <- col2a1_from
 to   <- col2a1_to
 pos  <- col2a1_pos
 scores_xlsx <- 'splai_col2a1.xlsx'
+input_bam <- "/Volumes/vol/work/workspace/Trimmed_BAMs/Sample_21407.recal.chr12_48367750_48399259.bam"
 
 chr  <- mecp2_chr
 from <- mecp2_from
 to   <- mecp2_to
 pos  <- mecp2_pos
+scores_xlsx <- 'splai_mecp2.xlsx'
+
+chr  <- nfe2l1_chr
+from <- nfe2l1_from
+to   <- nfe2l1_to
+pos  <- nfe2l1_pos
 scores_xlsx <- 'splai_mecp2.xlsx'
 
 ##################################################
@@ -74,29 +81,30 @@ scores_xlsx <- 'splai_mecp2.xlsx'
 # ideogram
 iTrack <- IdeogramTrack(
   genome = gen, chromosome = chr, cex = 2, bevel = 1, showId = TRUE
-  )
+)
 
 # axis
 axTrack <- GenomeAxisTrack(
   add35 = FALSE, add53 = FALSE, exponent = 0, fontcolor = "#383838",
   fontsize = 16, labelPos = "above"
-  )
+)
 
 ucscTrack <- UcscTrack(
   genome = gen, track = "NCBI RefSeq", trackType = "GeneRegionTrack",
   rstarts = "exonStarts", rends = "exonEnds", gene ="name", symbol = "name2", 
   transcript = "name", strand = "strand", table = "ncbiRefSeqSelect",
-  chromosome = chr, from = from, to = to, name = "COL2A1"
+  chromosome = chr, from = from, to = to, name = "Gene"
 )
 
 displayPars(ucscTrack) <- list(
   background.title = "#665990", fill ="#665990", cex = 1, 
   transcriptAnnotation = "transcript", fontsize = 12
-  )
+)
 
 for (i in 1:length(start(ucscTrack))) {
   start(ucscTrack)[i] <- start(ucscTrack)[i] + 1
 }
+
 
 # Highlight the variant position
 ht <- HighlightTrack(ucscTrack, alpha = 0.5, inBackground = FALSE, 
@@ -106,41 +114,71 @@ ht <- HighlightTrack(ucscTrack, alpha = 0.5, inBackground = FALSE,
 # Wide view with highlighted variant position
 plotTracks(
   list(iTrack, axTrack, ht), from = from - 1500, to = to + 500, type = "none"
-  )
-
+)
 
 ##################################################
 # For zoomed in view
 ##################################################
+# Axis 
+axTrack <- GenomeAxisTrack(
+  add35 = FALSE, add53 = FALSE, exponent = 0, fontcolor = "#383838",
+  fontsize = 16, labelPos = "above", size = 4
+)
 
 # Sequence track
-sTrack <- SequenceTrack(Hsapiens, chromosome = chr) 
+sTrack <- SequenceTrack(Hsapiens) 
 
 # Variant position
 varTrack <- AnnotationTrack(
-  genome = gen, width = 0, name = 'Var. Pos.', fill = "#383838", 
+  genome = gen, width = 0, name = 'Var.', fill = "#383838", 
   background.title = "#383838", shape = "box", group = "Variant",
-  just.group = "right", showOverplotting = TRUE, 
-  chromosome = chr, start = pos, 
-  )
+  just.group = "right", showOverplotting = TRUE, cex.title = 1.2,
+  chromosome = chr, start = pos, size = 3
+)
+
+ucscTrack <- UcscTrack(
+  genome = gen, track = "NCBI RefSeq", trackType = "GeneRegionTrack",
+  rstarts = "exonStarts", rends = "exonEnds", gene ="name", symbol = "name2", 
+  transcript = "name", strand = "strand", table = "ncbiRefSeq",
+  chromosome = chr, from = pos - 200, to = pos + 100, name = "Gene",
+  background.title = "#665990", fill ="#665990", cex.title = 1.2,
+  exonAnnotations = "transcript", fontsize = 12, size = 4
+)
 
 # Data track
 scores <- read.xlsx(scores_xlsx)
 splTrack <- DataTrack(
-  range = scores, chromosome = chr, genome="hg19", name="SpliceAI ∆", 
-  cex.title = 1.5, background.title = "#F8ACAC", type = "histogram", 
-  baseline = 0, ylim = c(-1, 1), lwd.baseline = 1, 
+  range = scores, chromosome = chr, genome="hg19", name="SpliceAI ∆ score", 
+  cex.title = 1.2, background.title = "#F8ACAC", type = "histogram", 
+  baseline = 0, ylim = c(-1, 1), lwd.baseline = 1,
   yTicksAt = c(-1.0, -0.5, 0, 0.5, 1.0), groups = c("AG", "AL", "DG", "DL"),
-  col = c("#6088C6", "#EB8686", "#73D0C2", "#ED8D49"),
-  cex.legend = 0.7, box.legend = FALSE)
+  col = c("#6088C6", "#EB8686", "#73D0C2", "#ED8D49"), legend = TRUE, cex.legend = 1, size = 12
+)
 
+plotTracks(
+  list(axTrack, sTrack, varTrack, ucscTrack, splTrack, alTrack),
+  chromosome = chr, from = pos-40, to = pos+40
+)
 
-# Zoom in to the variant position
-plotTracks(list(sTrack, varTrack, ucscTrack, splTrack), chromosome = chr, from = pos - 50, to = pos + 50)
+options(ucscChromosomeNames=FALSE) 
 
-# Conservation track
-# STEP 1: Fetach conservation data
-print(tracks)
+alTrack <- AlignmentsTrack(
+  input_bam, isPaired = TRUE, genome = "hg19", chromosome = chr, 
+  background.title = "darkgrey", type = c("pileup", "coverage"), 
+  stacking = "squish", minCoverageHeight = 20, cex.title = 1.4,
+  name = "Reads and Coverage information from BAM", coverageHeight = 0.05, showAxis = FALSE,
+  max.height = 8, min.height = 1, lwd.mismatch = 0.1, alpha.reads = 0.75, size = 16,
+  col.axis = "darkgray"
+)
+
+plotTracks(
+  list(axTrack, sTrack, varTrack, ucscTrack, splTrack, alTrack),
+  chromosome = chr, from = pos-40, to = pos+40
+)
+
+##
+######################## Conservation track ####################################
+#Fetach conservation data
 
 query1 <- ucscTableQuery(session, track = "Conservation", table = "phastCons100way")
 query2 <- ucscTableQuery(session, track = "Conservation", table = "phyloP100wayAll")
@@ -184,7 +222,6 @@ data2$end <- data2$end - 1
 data3$chromStart <- data3$chromStart + 1
 data4$end <- data4$end - 1
 
-
 # GRange objects
 gr1 <- GRanges(
   seqnames = Rle(chr),
@@ -221,6 +258,7 @@ absplice <- DataTrack(
   # col.histogram = "darkred", fill.histogram = "darkred",
   ylim = c(0, 0.5), yTicksAt = c(0, 0.1, 0.5), name = "AbSplice", type = "heatmap"
 )
+#
 plotTracks(absplice, from = pos - 50, to = pos + 50)
 #
 
@@ -239,8 +277,3 @@ gerp <- DataTrack(
 consot <- OverlayTrack(
   list(phylop100, gerp), col = c("darkgreen", "darkred")
 )
-
-
-# Zoom in to the variant position
-plotTracks(list(sTrack, varTrack, ucscTrack, splTrack, absplice, phylop100, gerp), from = pos - 32, to = pos + 45)
-plotTracks(list(axTrack, sTrack, varTrack, ucscTrack, splTrack, absplice, consot), from = pos - 50, to = pos + 50)
