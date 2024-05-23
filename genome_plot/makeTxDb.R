@@ -3,57 +3,57 @@ library(BSgenome.Hsapiens.UCSC.hg19)
 library(openxlsx)
 library(txdbmaker)
 
-# Load the data
-
 # Genome assembly
 gen <- "hg19"
 
-# Gene physical location
+# Case 1
 mecp2_chr  <- "chrX"
 mecp2_from <- 48932101
 mecp2_to   <- 48958116
+mecp2_pos <- 48933525
+mecp2_bam <- "bams/Sample_11467.X_154021573-154097717.bam"
 
+# Case 2
 col2a1_chr  <- "chr12"
 col2a1_from <- 48366750
 col2a1_to   <- 48398259
+col2a1_pos  <- 48387611
+col2a1_bam. <- "bams/Sample_21407.recal.chr12_48366750_48398259.rh.bam"
 
+# Case 3
 pdha1_chr   <- "chrX"
 pdha1_from  <- 19362045
 pdha1_to    <- 19379836
+pdha1_pos   <- 19373601
+pdha1_bam   <- "bams/Sample_17483.recal.X_19362045-19379836.rh.bam"
 
 jakmip1_chr  <- "chr4"
 jakmip1_from <- 6027926
 jakmip1_to   <- 6202276
+jakmip1_pos <- 6086572
+jakmip1_bam <- "bams/Sample_21599.recal.4_6027926-6202276.rh.bam"
 
 ubn1_chr   <- "chr16"
 ubn1_from  <- 4897482
 ubn1_to    <- 4932402
+ubn1_pos    <- 4918905
+ubn1_bam    <- "bams/Sample_9869.recal.16_4897482-4932402.rh.bam"
 
 znf516_chr  <- "chr18"
 znf516_from <- 74069637
 znf516_to   <- 74207198
+znf516_pos  <- 74082552
+znf516_bam  <- "bams/Sample_20287.recal.18_74069637-74207198.rh.bam"
 
 nfe2l1_chr  <- "chr17"
 nfe2l1_from <- 46125721
 nfe2l1_to   <- 46138907
-
-# Variant position
-mecp2_pos   <- 48933525
-col2a1_pos  <- 48387611
-peha1_pos   <- 19373601
-jakmip1_pos <- 6086572
-ubn1_pos    <- 4918905
-znf516_pos  <- 74082552
 nfe2l1_pos  <- 46134392
+nfe2l1_bam  <- "bams/Sample_12988.recal.17_46125721-46138907.rh.bam"
 
 # Gene names
 options(Gviz.ucscUrl="http://genome-asia.ucsc.edu/cgi-bin/")
-# Open a UCSC session
-session <- browserSession("UCSC")
-genome(session) <- "hg19"
-# List available tracks
-tracks <- trackNames(session)
-print(tracks)
+
 
 ## Variant info
 chr  <- col2a1_chr
@@ -178,7 +178,12 @@ plotTracks(
 
 ##
 ######################## Conservation track ####################################
-#Fetach conservation data
+# Open a UCSC session
+session <- browserSession("UCSC")
+genome(session) <- "hg19"
+# List available tracks
+tracks <- trackNames(session)
+print(tracks)
 
 query1 <- ucscTableQuery(session, track = "Conservation", table = "phastCons100way")
 query2 <- ucscTableQuery(session, track = "Conservation", table = "phyloP100wayAll")
