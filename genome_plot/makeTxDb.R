@@ -48,27 +48,35 @@ nfe2l1_pos  <- 46134392
 
 # Gene names
 options(Gviz.ucscUrl="http://genome-asia.ucsc.edu/cgi-bin/")
+# Open a UCSC session
+session <- browserSession("UCSC")
+genome(session) <- "hg19"
+# List available tracks
+tracks <- trackNames(session)
+print(tracks)
 
-
-# Create the TxDb object
-
-gffFile <- system.file("extdata", "GFF3_files", "col2a1.gff", package="GenomicFeatures")
-txdb <- makeTxDbFromGFF(file=gffFile,
-                        dataSource="partial gtf file for Tomatoes for testing",
-                        organism="Solanum lycopersicum")
-
-## TESTING GTF, this time specifying the chrominfo
-
-
+## Variant info
 chr  <- col2a1_chr
 from <- col2a1_from
 to   <- col2a1_to
 pos  <- col2a1_pos
+scores_xlsx <- 'splai_col2a1.xlsx'
 
+chr  <- mecp2_chr
+from <- mecp2_from
+to   <- mecp2_to
+pos  <- mecp2_pos
+scores_xlsx <- 'splai_mecp2.xlsx'
+
+##################################################
+# For wide view
+##################################################
+# ideogram
 iTrack <- IdeogramTrack(
   genome = gen, chromosome = chr, cex = 2, bevel = 1, showId = TRUE
   )
 
+# axis
 axTrack <- GenomeAxisTrack(
   add35 = FALSE, add53 = FALSE, exponent = 0, fontcolor = "#383838",
   fontsize = 16, labelPos = "above"
@@ -97,7 +105,7 @@ ht <- HighlightTrack(ucscTrack, alpha = 0.5, inBackground = FALSE,
 
 # Wide view with highlighted variant position
 plotTracks(
-  list(iTrack, axTrack, ht), from = from - 2000, to = to + 500, type = "none"
+  list(iTrack, axTrack, ht), from = from - 1500, to = to + 500, type = "none"
   )
 
 
@@ -110,19 +118,129 @@ sTrack <- SequenceTrack(Hsapiens, chromosome = chr)
 
 # Variant position
 varTrack <- AnnotationTrack(
-  genome = gen, width = 0, name = 'Variant Pos.', fill = "#383838", 
+  genome = gen, width = 0, name = 'Var. Pos.', fill = "#383838", 
   background.title = "#383838", shape = "box", group = "Variant",
   just.group = "right", showOverplotting = TRUE, 
   chromosome = chr, start = pos, 
   )
 
 # Data track
-
+scores <- read.xlsx(scores_xlsx)
+splTrack <- DataTrack(
+  range = scores, chromosome = chr, genome="hg19", name="SpliceAI ∆", 
+  cex.title = 1.5, background.title = "#F8ACAC", type = "histogram", 
+  baseline = 0, ylim = c(-1, 1), lwd.baseline = 1, 
+  yTicksAt = c(-1.0, -0.5, 0, 0.5, 1.0), groups = c("AG", "AL", "DG", "DL"),
+  col = c("#6088C6", "#EB8686", "#73D0C2", "#ED8D49"),
+  cex.legend = 0.7, box.legend = FALSE)
 
 
 # Zoom in to the variant position
-plotTracks(list(varTrack, sTrack, ucscTrack), from = pos - 50, to = pos + 50, type = "none")
+plotTracks(list(sTrack, varTrack, ucscTrack, splTrack), chromosome = chr, from = pos - 50, to = pos + 50)
+
+# Conservation track
+# STEP 1: Fetach conservation data
+print(tracks)
+
+query1 <- ucscTableQuery(session, track = "Conservation", table = "phastCons100way")
+query2 <- ucscTableQuery(session, track = "Conservation", table = "phyloP100wayAll")
+query3 <- ucscTableQuery(session, track = "AbSplice Scores", table = "abSplice")
+query4 <- ucscTableQuery(session, track = "GERP", table = "allHg19RS_BW")
+
+range(query1) <- GRanges(seqnames = chr, ranges = IRanges(start = from, end = to))
+range(query2) <- GRanges(seqnames = chr, ranges = IRanges(start = from, end = to))
+range(query3) <- GRanges(seqnames = chr, ranges = IRanges(start = pos - 200, end = pos + 200))
+range(query4) <- GRanges(seqnames = chr, ranges = IRanges(start = pos - 500, end = pos + 500))
+data1 <- getTable(query1)
+data2 <- getTable(query2)
+data3 <- getTable(query3)
+data4 <- getTable(query4)
+
+# Check data only head
+print(head(data1))
+print(head(data2))
+print(head(data3))
+print(head(data4))
+
+# STEP 2: Create a conservation track
+data1$start <- as.numeric(data1$start)
+data1$end <- as.numeric(data1$end)
+data1$value <- as.numeric(data1$value)
+
+data2$start <- as.numeric(data2$start)
+data2$end <- as.numeric(data2$end)
+data2$value <- as.numeric(data2$value)
+
+data3$chromStart <- as.numeric(data3$chromStart)
+data3$chromEnd <- as.numeric(data3$chromEnd)
+data3$spliceABscore <- as.numeric(data3$spliceABscore)
+
+data4$start <- as.numeric(data4$start)
+data4$end <- as.numeric(data4$end)
+data4$value <- as.numeric(data4$value)
+
+# Reduce 1 bp from the end position in data4
+data2$end <- data2$end - 1
+data3$chromStart <- data3$chromStart + 1
+data4$end <- data4$end - 1
 
 
+# GRange objects
+gr1 <- GRanges(
+  seqnames = Rle(chr),
+  ranges = IRanges(start = data1$start, end = data1$end),
+  score = data1$value
+)
+
+gr2 <- GRanges(
+  seqnames = Rle(chr),
+  ranges = IRanges(start = data2$start, end = data2$end),
+  score = data2$value
+)
+
+gr3 <- GRanges(
+  seqnames = Rle(chr), 
+  ranges = IRanges(start = data3$chromStart, end = data3$chromEnd),
+  score = data3$spliceABscore
+)
+
+gr4 <- GRanges(
+  seqnames = Rle(chr),
+  ranges = IRanges(start = data4$start, end = data4$end),
+  score = data4$value
+)
+
+phastcons100 <- DataTrack(
+  range = gr1, genome = gen, chromosome = chr, data = data1$value,
+  type = "hist", col.histogram = "darkblue", fill.histogram = "darkblue",
+  ylim = c(0, 1), yTicksAt = c(0, 1.0), name = "phastsons100"
+)
+
+absplice <- DataTrack(
+  range = gr3, genome = gen, chromosome = chr, data = "score",
+  # col.histogram = "darkred", fill.histogram = "darkred",
+  ylim = c(0, 0.5), yTicksAt = c(0, 0.1, 0.5), name = "AbSplice", type = "heatmap"
+)
+plotTracks(absplice, from = pos - 50, to = pos + 50)
+#
+
+phylop100 <- DataTrack(
+  range = gr2, genome = gen, chromosome = chr, data = data2$value,
+  type = "hist", col.histogram = "darkgreen", fill.histogram = "darkgreen",
+  ylim = c(-8, 8), name = "PhyloP", alpha = 0.8
+)
+
+gerp <- DataTrack(
+  range = gr4, genome = gen, chromosome = chr, data = data4$value,
+  type = "hist", col.histogram = "darkred", fill.histogram = "darkred",
+  ylim = c(-8, 8), name = "GERP", alpha = 0.8
+)
+
+consot <- OverlayTrack(
+  list(phylop100, gerp), col = c("darkgreen", "darkred")
+)
 
 
+# Zoom in to the variant position
+plotTracks(list(sTrack, varTrack, ucscTrack, splTrack, absplice, phylop100, gerp), from = pos - 32, to = pos + 45)
+plotTracks(list(axTrack, sTrack, varTrack, ucscTrack, splTrack, absplice, consot), from = pos - 50, to = pos + 50)

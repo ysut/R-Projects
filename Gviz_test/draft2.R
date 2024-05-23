@@ -57,12 +57,6 @@ plotTracks(ht, from=from-20000, to=to+20000)
 
 tracklist = list(itrack, mecp2, ht)
 
-
-zoom in intersetibg
-
-
-
-
 # sequence
 strack <- SequenceTrack(Hsapiens, chromosome = chr, 
                         add53 = TRUE, complement = FALSE)
