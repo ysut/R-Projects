@@ -12,13 +12,15 @@ mecp2_from <- 48932101
 mecp2_to   <- 48958116
 mecp2_pos <- 48933525
 mecp2_bam <- "bams/Sample_11467.X_154021573-154097717.bam"
+mecp2_xlsx <- "splai_mecp2.xlsx"
 
 # Case 2
 col2a1_chr  <- "chr12"
 col2a1_from <- 48366750
 col2a1_to   <- 48398259
 col2a1_pos  <- 48387611
-col2a1_bam. <- "bams/Sample_21407.recal.chr12_48366750_48398259.rh.bam"
+col2a1_bam  <- "bams/Sample_21407.recal.12_48366750-48398259.rh.bam"
+col2a1_xlsx <- "splai_col2a1.xlsx"
 
 # Case 3
 pdha1_chr   <- "chrX"
@@ -26,24 +28,28 @@ pdha1_from  <- 19362045
 pdha1_to    <- 19379836
 pdha1_pos   <- 19373601
 pdha1_bam   <- "bams/Sample_17483.recal.X_19362045-19379836.rh.bam"
+pdha1_xlsx  <- "splai_pdha1.xlsx"
 
 jakmip1_chr  <- "chr4"
 jakmip1_from <- 6027926
 jakmip1_to   <- 6202276
 jakmip1_pos <- 6086572
 jakmip1_bam <- "bams/Sample_21599.recal.4_6027926-6202276.rh.bam"
+jakmip1_xlsx <- "splai_jakmip1.xlsx"
 
 ubn1_chr   <- "chr16"
 ubn1_from  <- 4897482
 ubn1_to    <- 4932402
 ubn1_pos    <- 4918905
 ubn1_bam    <- "bams/Sample_9869.recal.16_4897482-4932402.rh.bam"
+ubn1_xlsx   <- "splai_ubn1.xlsx"
 
 znf516_chr  <- "chr18"
 znf516_from <- 74069637
 znf516_to   <- 74207198
 znf516_pos  <- 74082552
 znf516_bam  <- "bams/Sample_20287.recal.18_74069637-74207198.rh.bam"
+
 
 nfe2l1_chr  <- "chr17"
 nfe2l1_from <- 46125721
@@ -60,33 +66,59 @@ chr  <- col2a1_chr
 from <- col2a1_from
 to   <- col2a1_to
 pos  <- col2a1_pos
-scores_xlsx <- 'splai_col2a1.xlsx'
-input_bam <- "/Volumes/vol/work/workspace/Trimmed_BAMs/Sample_21407.recal.chr12_48367750_48399259.bam"
+scores_xlsx <- col2a1_xlsx
+input_bam <- col2a1_bam
 
+# Case 4
+chr  <- pdha1_chr
+from <- pdha1_from
+to   <- pdha1_to
+pos  <- pdha1_pos
+scores_xlsx <- pdha1_xlsx
+input_bam <- pdha1_bam
+
+# Case 1
 chr  <- mecp2_chr
 from <- mecp2_from
 to   <- mecp2_to
 pos  <- mecp2_pos
-scores_xlsx <- 'splai_mecp2.xlsx'
+scores_xlsx <- mecp2_xlsx
+input_bam <- mecp2_bam
+
+# Case 5
+chr  <- jakmip1_chr
+from <- jakmip1_from
+to   <- jakmip1_to
+pos  <- jakmip1_pos
+scores_xlsx <- jakmip1_xlsx
+input_bam <- jakmip1_bam
+
+# Case 6
+chr  <- ubn1_chr
+from <- ubn1_from
+to   <- ubn1_to
+pos  <- ubn1_pos
+
+input_bam <- ubn1_bam
+
 
 chr  <- nfe2l1_chr
 from <- nfe2l1_from
 to   <- nfe2l1_to
 pos  <- nfe2l1_pos
-scores_xlsx <- 'splai_mecp2.xlsx'
 
 ##################################################
 # For wide view
 ##################################################
 # ideogram
 iTrack <- IdeogramTrack(
-  genome = gen, chromosome = chr, cex = 2, bevel = 1, showId = TRUE
+  genome = gen, chromosome = chr, cex = 1.2, bevel = 1, showId = TRUE
 )
 
 # axis
 axTrack <- GenomeAxisTrack(
   add35 = FALSE, add53 = FALSE, exponent = 0, fontcolor = "#383838",
-  fontsize = 16, labelPos = "above"
+  fontsize = 16, labelPos = "below", size = 3
 )
 
 ucscTrack <- UcscTrack(
@@ -98,13 +130,12 @@ ucscTrack <- UcscTrack(
 
 displayPars(ucscTrack) <- list(
   background.title = "#665990", fill ="#665990", cex = 1, 
-  transcriptAnnotation = "transcript", fontsize = 12
+  transcriptAnnotation = "transcript", fontsize = 12, size = 0.5
 )
 
 for (i in 1:length(start(ucscTrack))) {
   start(ucscTrack)[i] <- start(ucscTrack)[i] + 1
 }
-
 
 # Highlight the variant position
 ht <- HighlightTrack(ucscTrack, alpha = 0.5, inBackground = FALSE, 
@@ -113,20 +144,21 @@ ht <- HighlightTrack(ucscTrack, alpha = 0.5, inBackground = FALSE,
 
 # Wide view with highlighted variant position
 plotTracks(
-  list(iTrack, axTrack, ht), from = from - 1500, to = to + 500, type = "none"
+  list(iTrack, ht, axTrack), from = from - 30000, to = to + 22000, type = "none"
 )
 
 ##################################################
 # For zoomed in view
 ##################################################
+# Sequence track
+sTrack <- SequenceTrack(Hsapiens) 
+
 # Axis 
 axTrack <- GenomeAxisTrack(
   add35 = FALSE, add53 = FALSE, exponent = 0, fontcolor = "#383838",
-  fontsize = 16, labelPos = "above", size = 4
+  fontsize = 16, labelPos = "above", size = 8
 )
 
-# Sequence track
-sTrack <- SequenceTrack(Hsapiens) 
 
 # Variant position
 varTrack <- AnnotationTrack(
@@ -139,24 +171,29 @@ varTrack <- AnnotationTrack(
 ucscTrack <- UcscTrack(
   genome = gen, track = "NCBI RefSeq", trackType = "GeneRegionTrack",
   rstarts = "exonStarts", rends = "exonEnds", gene ="name", symbol = "name2", 
-  transcript = "name", strand = "strand", table = "ncbiRefSeq",
-  chromosome = chr, from = pos - 200, to = pos + 100, name = "Gene",
-  background.title = "#665990", fill ="#665990", cex.title = 1.2,
-  exonAnnotations = "transcript", fontsize = 12, size = 4
+  transcript = "name", strand = "strand", table = "ncbiRefSeqSelect",
+  chromosome = chr, from = pos - 200, to = pos + 100, name = "",
+  background.title = "#665990", fill ="#665990", cex.title = 1.0,
+  exonAnnotations = "transcript", fontsize = 12, size = 3
 )
+for (i in 1:length(start(ucscTrack))) {
+  start(ucscTrack)[i] <- start(ucscTrack)[i] + 1
+}
 
 # Data track
 scores <- read.xlsx(scores_xlsx)
 splTrack <- DataTrack(
-  range = scores, chromosome = chr, genome="hg19", name="SpliceAI ∆ score", 
+  range = scores, chromosome = chr, genome="hg19", name="∆ score", 
   cex.title = 1.2, background.title = "#F8ACAC", type = "histogram", 
   baseline = 0, ylim = c(-1, 1), lwd.baseline = 1,
   yTicksAt = c(-1.0, -0.5, 0, 0.5, 1.0), groups = c("AG", "AL", "DG", "DL"),
-  col = c("#6088C6", "#EB8686", "#73D0C2", "#ED8D49"), legend = TRUE, cex.legend = 1, size = 12
+  col = c("#6088C6", "#EB8686", "#73D0C2", "#ED8D49"), legend = TRUE, 
+  cex.legend = 1, size = 30
 )
 
 plotTracks(
-  list(axTrack, sTrack, varTrack, ucscTrack, splTrack, alTrack),
+  list(axTrack, ucscTrack, splTrack, sTrack, alTrack),
+  # list(axTrack, sTrack, varTrack, ucscTrack, splTrack, alTrack),
   chromosome = chr, from = pos-40, to = pos+40
 )
 
@@ -164,16 +201,17 @@ options(ucscChromosomeNames=FALSE)
 
 alTrack <- AlignmentsTrack(
   input_bam, isPaired = TRUE, genome = "hg19", chromosome = chr, 
-  background.title = "darkgrey", type = c("pileup", "coverage"), 
-  stacking = "squish", minCoverageHeight = 20, cex.title = 1.4,
-  name = "Reads and Coverage information from BAM", coverageHeight = 0.05, showAxis = FALSE,
+  background.title = "darkgrey", type = c("pileup"), 
+  stacking = "squish", minCoverageHeight = 20, cex.title = 1.2,
+  name = "BAM data", coverageHeight = 0.05, showAxis = FALSE,
   max.height = 8, min.height = 1, lwd.mismatch = 0.1, alpha.reads = 0.75, size = 16,
   col.axis = "darkgray"
 )
 
 plotTracks(
-  list(axTrack, sTrack, varTrack, ucscTrack, splTrack, alTrack),
-  chromosome = chr, from = pos-40, to = pos+40
+  list(axTrack, ucscTrack, splTrack, sTrack, alTrack),
+  # list(axTrack, sTrack, varTrack, ucscTrack, splTrack, alTrack),
+  chromosome = chr, from = pos-400, to = pos+400
 )
 
 ##
