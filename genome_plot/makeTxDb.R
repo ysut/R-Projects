@@ -6,14 +6,6 @@ library(txdbmaker)
 # Genome assembly
 gen <- "hg19"
 
-# Case 1
-mecp2_chr  <- "chrX"
-mecp2_from <- 48932101
-mecp2_to   <- 48958116
-mecp2_pos <- 48933525
-mecp2_bam <- "bams/Sample_11467.X_154021573-154097717.bam"
-mecp2_xlsx <- "splai_mecp2.xlsx"
-
 # Case 2
 col2a1_chr  <- "chr12"
 col2a1_from <- 48366750
@@ -76,14 +68,6 @@ to   <- pdha1_to
 pos  <- pdha1_pos
 scores_xlsx <- pdha1_xlsx
 input_bam <- pdha1_bam
-
-# Case 1
-chr  <- mecp2_chr
-from <- mecp2_from
-to   <- mecp2_to
-pos  <- mecp2_pos
-scores_xlsx <- mecp2_xlsx
-input_bam <- mecp2_bam
 
 # Case 5
 chr  <- jakmip1_chr

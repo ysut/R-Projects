@@ -123,7 +123,7 @@ sashimiTrack <- AlignmentsTrack(
   background.title = "darkgrey", type = c("coverage", "sashimi"), 
   stacking = "squish", minCoverageHeight = 2, cex.title = 1.2, fontsize = 16,
   name = "RNA-seq data", coverageHeight = 0.01, size = 1,
-  col.axis = "darkgray", sashimiScore = 10, cex.axis = 0
+  col.axis = "darkgray", sashimiScore = 8, cex.axis = 0
 )
 
 # Highlight the variant position
