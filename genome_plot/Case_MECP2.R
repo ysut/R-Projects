@@ -76,9 +76,8 @@ plotTracks(
 )
 
 ##################################################
-# For zoomed in view
+# For wide view with sashimi
 ##################################################
-# Sequence track
 
 # Axis 
 axTrack <- GenomeAxisTrack(
@@ -163,7 +162,7 @@ splTrack <- DataTrack(
   cex.title = 1.0, background.title = "#F8ACAC", type = "histogram", 
   baseline = 0, col.baseline = "#838383", lty.baseline = 2, lwd.baseline = 2,
   ylim = c(-1, 1), lwd.baseline = 2, fontsize = 16,
-  yTicksAt = c(-1.0, -0.5, 0.5, 1.0), groups = c("AG", "AL", "DG", "DL"),
+  yTicksAt = c(-1.0, -0.5,0 , 0.5, 1.0), groups = c("AG", "AL", "DG", "DL"),
   col = c("#6088C6", "#EF8875", "#49A190", "#ED8D49"), legend = TRUE, 
   cex.legend = 1.6, size = 100, cex.axis = 0.9
 )
@@ -182,10 +181,10 @@ alTrack <- AlignmentsTrack(
 zoomcoverTrack <- AlignmentsTrack(
   input_rnaseq, isPaired = TRUE, genome = gen, chromosome = chr, 
   background.title = "darkgrey", type = c("coverage"), 
-  stacking = "squish", minCoverageHeight = 50, cex.title = 1.0, fontsize = 12,
+  stacking = "squish", minCoverageHeight = 50, cex.title = 1.1, fontsize = 12,
   name = "RNA-seq coverage", coverageHeight = 0.01, size = 5,
   col.axis = "white",
-  cex.axis = 0.9
+  cex.axis = 0.5
 )
 
 ## Plot ##
