@@ -4,6 +4,7 @@ db <- useMart("ensembl")
 hd <- useDataset("hsapiens_gene_ensembl", mart = db)
 ids = c("hgnc_symbol", "hgnc_id", "description")
 
+setwd("/Volumes/SSD_480GB/workspace/Github/R-Projects/IDconvert")
 
 listDatasets(db)
 filters <- listFilters(hd)
@@ -38,7 +39,8 @@ res
 write.table(res, "ajhg.tsv", sep = "\t", row.names = FALSE)
 
 ################################################################################
-data <- read.xlsx("higene.xlsx", 1)
+higene_xlsx <- "/Volumes/SSD_480GB/workspace/Github/dev/Resources/02_EstimatedLoFGenes/higene.xlsx"
+data <- read.xlsx(higene_xlsx, 1)
 res2 <- getBM(attributes = ids,
               filters = "hgnc_symbol", values = data$gene, 
               mart = hd, useCache = FALSE)
@@ -54,7 +56,9 @@ res3
 write.table(res3, "gnomad.tsv", sep = "\t", row.names = FALSE)
 
 ################################################################################
-data <- read.xlsx("phaplo.xlsx", 1)
+phaplo_xlsx <- "/Volumes/SSD_480GB/workspace/Github/dev/Resources/02_EstimatedLoFGenes/phaplo.xlsx"
+phaplo_xlsx <- "/Volumes/SSD_480GB/workspace/Github/dev/Resources/02_EstimatedLoFGenes/phaplo_chk.xlsx"
+data <- read.xlsx(phaplo_xlsx, 1)
 res4 <- getBM(attributes = ids,
               filters = "hgnc_symbol", values = data$gene, 
               mart = hd, useCache = FALSE)

@@ -47,23 +47,24 @@ ucscTrack <- UcscTrack(
   chromosome = chr, from = from, to = to, name = "Gene"
 )
 
-displayPars(ucscTrack) <- list(
-  background.title = "#665990", fill ="#665990", cex = 4, 
-  transcriptAnnotation = "transcript", fontsize = 12, size = 0.5
-)
-
 for (i in 1:length(start(ucscTrack))) {
   start(ucscTrack)[i] <- start(ucscTrack)[i] + 1
 }
 
+displayPars(ucscTrack) <- list(
+  background.title = "#665990", fill ="#665990", cex = 4, 
+  transcriptAnnotation = "transcript", fontsize = 12, size = 0.5,
+  cex.group = 0.8, showId = TRUE
+)
+
 # Highlight the variant position
 ht <- HighlightTrack(ucscTrack, alpha = 0.5, inBackground = FALSE, 
-  chromosome = chr, start = pos - 1200, width = 100
+  chromosome = chr, start = pos - 100, width = 200
 )
 
 # Wide view with highlighted variant position
 plotTracks(
-  list(iTrack, ht, axTrack), from = from - 10000, to = to + 2000, type = "none"
+  list(iTrack, ht, axTrack), from = from - 12000, to = to + 2000, type = "none"
 )
 
 ##################################################
