@@ -40,7 +40,7 @@ axTrack <- GenomeAxisTrack(
   fontsize = 16, labelPos = "below", size = 3
 )
 
-ucscTrack <- UcscTrack(
+wideucscTrack <- UcscTrack(
   genome = gen, track = "NCBI RefSeq", trackType = "GeneRegionTrack",
   rstarts = "exonStarts", rends = "exonEnds", gene ="name", symbol = "name2", 
   transcript = "name", strand = "strand", table = "ncbiRefSeqSelect",
@@ -51,38 +51,34 @@ for (i in 1:length(start(ucscTrack))) {
   start(ucscTrack)[i] <- start(ucscTrack)[i] + 1
 }
 
-displayPars(ucscTrack) <- list(
+displayPars(wideucscTrack) <- list(
   background.title = "#665990", fill ="#665990", cex = 4, 
   transcriptAnnotation = "transcript", fontsize = 12, size = 0.5,
-  cex.group = 0.8, showId = TRUE
+  cex.group = 1.0, showId = TRUE
 )
 
 # Highlight the variant position
-ht <- HighlightTrack(ucscTrack, alpha = 0.5, inBackground = FALSE, 
-  chromosome = chr, start = pos - 100, width = 200
+ht <- HighlightTrack(wideucscTrack, alpha = 0.5, inBackground = FALSE, 
+  chromosome = chr, start = pos - 1180, width = 1220
 )
 
 # Wide view with highlighted variant position
 plotTracks(
-  list(iTrack, ht, axTrack), from = from - 12000, to = to + 2000, type = "none"
+  list(iTrack, ht, axTrack), 
+  from = from - 42000, to = to + 2000, type = "none"
 )
 
 ##################################################
 # For zoomed in view
 ##################################################
 # Sequence track
-sTrack <- SequenceTrack(Hsapiens) 
+sTrack <- SequenceTrack(Hsapiens, noLetters=FALSE) 
 
 # Axis 
 axTrack <- GenomeAxisTrack(
   add35 = FALSE, add53 = FALSE, exponent = 0, fontcolor = "#383838",
-  fontsize = 16, labelPos = "above", size = 8, distFromAxis = 1.2
+  fontsize = 10, labelPos = "above", size = 8, distFromAxis = 1.2
 )
-plotTracks(list(axTrack), from = pos - 10, to = pos + 10)
-
-start(axTrack)
-#
-
 
 # Variant position
 varTrack <- AnnotationTrack(
@@ -107,11 +103,11 @@ for (i in 1:length(start(ucscTrack))) {
 # Data track
 scores <- read.xlsx(scores_xlsx)
 splTrack <- DataTrack(
-  range = scores, chromosome = chr, genome="hg19", name="∆ score", 
-  cex.title = 1.2, background.title = "#F8ACAC", type = "histogram", 
+  range = scores, chromosome = chr, genome="hg19", name=" ∆ score", 
+  cex.title = 1.0, background.title = "#F8ACAC", type = "histogram", 
   baseline = 0, ylim = c(-1, 1), lwd.baseline = 1,
   yTicksAt = c(-1.0, -0.5, 0, 0.5, 1.0), groups = c("AG", "AL", "DG", "DL"),
-  col = c("#6088C6", "#EB8686", "#73D0C2", "#ED8D49"), legend = TRUE, 
+  col = c("#6088C6", "#EB8686", "#73D0C2", "#ED8D49"), legend = FALSE, 
   cex.legend = 1, size = 30
 )
 
@@ -120,7 +116,7 @@ options(ucscChromosomeNames=FALSE)
 alTrack <- AlignmentsTrack(
   input_bam, isPaired = TRUE, genome = "hg19", chromosome = chr, 
   background.title = "darkgrey", type = c("pileup"), 
-  stacking = "squish", minCoverageHeight = 20, cex.title = 1.2,
+  stacking = "squish", minCoverageHeight = 20, cex.title = 1.0,
   name = "BAM data", coverageHeight = 0.05, showAxis = FALSE,
   max.height = 8, min.height = 1, lwd.mismatch = 0.1, alpha.reads = 0.75, size = 16,
   col.axis = "darkgray"
@@ -133,19 +129,49 @@ plotTracks(
 )
 
 
+# Highlight the variant position
+ht2 <- HighlightTrack(c(ucscTrack, splTrack, alTrack),
+                      alpha = 0.5, inBackground = FALSE, 
+                      chromosome = chr, 
+                      start = c(pos - 1165, pos -125, pos - 20), 
+                      width = c(20, 15, 40)
+)
+
+
+plotTracks(
+  list(axTrack, ht2),
+  # list(axTrack, sTrack, varTrack, ucscTrack, splTrack, alTrack),
+  chromosome = chr, from = pos-1180, to = pos+40
+)
+
+# Donor gain
+scores <- read.xlsx(scores_xlsx)
+splTrack <- DataTrack(
+  range = scores, chromosome = chr, genome="hg19", name=" ", 
+  cex.title = 1.0, background.title = "#F8ACAC", type = "histogram", 
+  baseline = 0, ylim = c(-1, 1), lwd.baseline = 1,
+  yTicksAt = c(-1.0, -0.5, 0, 0.5, 1.0), groups = c("AG", "AL", "DG", "DL"),
+  col = c("#6088C6", "#EB8686", "#73D0C2", "#ED8D49"), legend = FALSE, 
+  cex.legend = 1, size = 30
+)
 plotTracks(
   list(axTrack, ucscTrack, splTrack, sTrack, alTrack),
   # list(axTrack, sTrack, varTrack, ucscTrack, splTrack, alTrack),
   chromosome = chr, from = pos-1165, to = pos-1145
 )
 
-
+# Donor loss
 plotTracks(
   list(axTrack, ucscTrack, splTrack, sTrack, alTrack),
   # list(axTrack, sTrack, varTrack, ucscTrack, splTrack, alTrack),
-  chromosome = chr, from = pos-10, to = pos + 10
+  chromosome = chr, from = pos-125, to = pos + 8
 )
-
+# PTC
+plotTracks(
+  list(ucscTrack, sTrack, alTrack),
+  # list(axTrack, sTrack, varTrack, ucscTrack, splTrack, alTrack),
+  chromosome = chr, from = pos-125, to = pos -110
+)
 
 mdTrack <- DataTrack(
   range = GRanges(
