@@ -80,14 +80,6 @@ axTrack <- GenomeAxisTrack(
   fontsize = 10, labelPos = "above", size = 8, distFromAxis = 1.2
 )
 
-# Variant position
-varTrack <- AnnotationTrack(
-  genome = gen, width = 0, name = 'Var.', fill = "#383838", 
-  background.title = "#383838", shape = "box", group = "Variant",
-  just.group = "right", showOverplotting = TRUE, cex.title = 1.2,
-  chromosome = chr, start = pos, size = 3
-)
-
 ucscTrack <- UcscTrack(
   genome = gen, track = "NCBI RefSeq", trackType = "GeneRegionTrack",
   rstarts = "exonStarts", rends = "exonEnds", gene ="name", symbol = "name2", 
