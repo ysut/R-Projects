@@ -1,6 +1,7 @@
 library(Gviz)
 library(BSgenome.Hsapiens.UCSC.hg19)
 library(openxlsx)
+library(rtracklayer)
 
 # Conncecting options
 options(Gviz.ucscUrl="http://genome-asia.ucsc.edu/cgi-bin/")
@@ -13,7 +14,7 @@ znf516_from <- 74069637
 znf516_to   <- 74207198
 znf516_pos  <- 74082552
 znf516_bam  <- "bams/Sample_20287.recal.18_74069637-74207198.rh.bam"
-znf516_xlsx <- "splai_znf516.xlsx"
+znf516_xlsx <- "spliceai_scores/splai_znf516.xlsx"
 
 chr  <- znf516_chr
 from <- znf516_from
@@ -21,6 +22,40 @@ to   <- znf516_to
 pos  <- znf516_pos
 input_bam <- znf516_bam
 scores_xlsx <- znf516_xlsx
+
+
+
+## CCRs
+ccrs_bw <- "bigwig/ccrs.autosomes.v2.20180420.bw"
+grangesData <- import(ccrs_bw, format = "bigWig")
+highScoreData <- grangesData[grangesData$score >= 95]
+mediumScoreData <- grangesData[grangesData$score >= 90 & grangesData$score < 95]
+lowScoreData <- grangesData[grangesData$score < 90]
+
+highScoreTrack <- DataTrack(
+  range = highScoreData, type = "histo", chromosome = chr, genome = gen,
+  name = "CCRs (%tile)", fill = "#EF8875", ylim = c(0, 100)
+)
+
+mediumScoreTrack <- DataTrack(
+  range = mediumScoreData, type = "histo", chromosome = chr, genome = gen,
+  name = "CCRs (%tile)", fill = "#F7CDB6", ylim = c(0, 100), 
+  fontsize = 1.2, size = 0.5, cex.title = 10,
+)
+
+lowScoreTrack <- DataTrack(
+  range = lowScoreData, type = "histo", chromosome = chr, genome = gen,
+  name = "CCRs (%tile)", fill = "lightgrey", ylim = c(0, 100), alpha = 0.3
+)
+ov = OverlayTrack(
+  list(mediumScoreTrack, lowScoreTrack, highScoreTrack),
+  name = "CCRs (%tile)", background.title = "#909090"
+  )
+
+plotTracks(
+  list(iTrack, ht, ov, axTrack), from = 74153000, to = 74156000
+)
+
 
 #####################
 ### For wide view ###
@@ -60,7 +95,7 @@ iTrack <- IdeogramTrack(
 )
 # Wide view with highlighted variant position
 plotTracks(
-  list(iTrack, ht, axTrack), from = from - 15000, to = to + 1000, type = "none"
+  list(iTrack, ht, ov, axTrack), from = from - 15000, to = to + 1000
 )
 
 
@@ -72,7 +107,6 @@ axTrack <- GenomeAxisTrack(
   add35 = FALSE, add53 = FALSE, exponent = 0, fontcolor = "#383838",
   fontsize = 20, size = 12, distFromAxis = 1.5
 )
-
 
 zoomucscTrack <- UcscTrack(
   genome = gen, track = "NCBI RefSeq", trackType = "GeneRegionTrack",
@@ -159,13 +193,6 @@ plotTracks(c(axTrack, zoomucscTrack, ptcTrack, sTrack, alTrack),
 
 ##### CCRs
 
-bw <- "/Volumes/vol/utsu/Downloads/ccrs.autosomes.v2.20180420.bw"
 
-
-library(rtracklayer)
-grangesData <- import(bw, format = "bigWig")
-ccrTrack <- DataTrack(range = grangesData, type = "histo", chromosome = chr, genome = gen, 
-                 name = "CCR", col = "blue", fill = "blue", ylim = c(0, 100)
-                 )
 plotTracks(c(sTrack, ccrTrack), from = pos -100, to = pos +100, chromosome = chr)
 
