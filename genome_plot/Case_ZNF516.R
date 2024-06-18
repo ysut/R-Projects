@@ -56,6 +56,10 @@ plotTracks(
   list(iTrack, ht, ov, axTrack), from = 74153000, to = 74156000
 )
 
+#####################
+# Disordered region
+disordered_bw <- "bigwig/disordered_regions.bw"
+
 
 #####################
 ### For wide view ###
