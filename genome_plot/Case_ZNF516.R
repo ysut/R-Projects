@@ -61,10 +61,6 @@ plotTracks(
   list(ov), from = from, to = to
 )
 
-#####################
-# Disordered region
-disordered_bw <- "bigwig/disordered_regions.bw"
-
 
 #####################
 ### For wide view ###
@@ -123,7 +119,7 @@ plotTracks(
 
 # chr18:74074452-74074513 and chr18:74082483-74082524
 idrTrack <- AnnotationTrack(
-  genome = gen, width = c(60, 11), name = 'IDR', fill = "darkgrey", 
+  genome = gen, width = c(60, 41), name = 'IDR', fill = "darkgrey", 
   background.title = "#404040", shape = "box", group = "IDR", 
   just.group = "right", showOverplotting = TRUE, showTitle = TRUE,
   chromosome = chr, start = c(74074452, 74082483), size = 12, 

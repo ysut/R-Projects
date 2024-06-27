@@ -15,13 +15,12 @@ axTrack <- GenomeAxisTrack(
 ###  Dummy scores for overlap track ###
 dummyscores <- read.xlsx("dummy_scores.xlsx")
 dummyTrack <- DataTrack(
-  range = dummyscores, chromosome = chr, genome = gen, name="SpliceAI ∆Score", 
+  range = dummyscores, chromosome = chr, genome = gen, name="SpliceAI\n∆Score", 
   background.title = "#F8ACAC", type = "histogram", ylim = c(-1, 1),
-  baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1,
   yTicksAt = c(-1.0, 0, 1.0), groups = c("AG", "AL", "DG", "DL"),
   col = c("#6088C6", "#EF8875", "#49A190", "#ED8D49"), legend = FALSE, 
-  cex.title = 1.2, 
-  fontsize = 12, cex.axis = 1.2, 
+  cex.title = 1.0, 
+  fontsize = 10, cex.axis = 1.0, 
   size = 2
 )
 
@@ -48,18 +47,18 @@ pseudoexonTrack <- GeneRegionTrack(
 pseudoexon_xlsx <- "01_pseudoexon/splai_pseudoexon.xlsx"
 pseudoexon_scores <- read.xlsx(pseudoexon_xlsx)
 pseudoex_splaiTrack <- DataTrack(
-  range = pseudoexon_scores, chromosome = chr, genome = gen, name="SpliceAI ∆Score", 
+  range = pseudoexon_scores, chromosome = chr, genome = gen, 
   background.title = "#F8ACAC", type = "histogram", 
   ylim = c(-1, 1), yTicksAt = c(-1, 0, 1),
-  # baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1,
-  groups = c("AG", "AL", "DG", "DL"),
-  col = c("#6088C6", "#EF8875", "#49A190", "#ED8D49"), legend = FALSE, 
+  baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1,
+  groups = c("AG", "AL", "DG", "DL", "Variant"),
+  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49", "black"), legend = FALSE, 
   size = 1
 )
 
 ov <- OverlayTrack(
   list(dummyTrack, gmtrack, pseudoex_splaiTrack, pseudoexonTrack), 
-  background.title = "#665990"
+  background.title = "#838383"
 )
 plotTracks(c(axTrack, ov), from = 985, to = 1155)
 
@@ -81,15 +80,15 @@ exonskip_splaiTrack <- DataTrack(
   range = exonskip_scores, chromosome = chr, genome = gen, name="SpliceAI ∆Score", 
   background.title = "#F8ACAC", type = "histogram", 
   ylim = c(-1, 1), yTicksAt = c(-1, 0, 1),
-  # baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1,
+  baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1,
   groups = c("AG", "AL", "DG", "DL"),
-  col = c("#6088C6", "#EF8875", "#49A190", "#ED8D49"), legend = FALSE, 
+  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49"), legend = FALSE, 
   size = 1
 )
 
 ov <- OverlayTrack(
   list(dummyTrack, gmtrack, exonskip_splaiTrack, skipexTrack), 
-  background.title = "#665990"
+  background.title = "#838383"
 )
 plotTracks(c(axTrack, ov), from = 985, to = 1155)
 
@@ -112,13 +111,13 @@ intret_splaiTrack <- DataTrack(
   ylim = c(-1, 1), yTicksAt = c(-1, 0, 1),
   baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1.0,
   groups = c("AG", "AL", "DG", "DL"),
-  col = c("#6088C6", "#EF8875", "#49A190", "#ED8D49"), legend = FALSE, 
+  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49"), legend = FALSE, 
   size = 1
 )
 
 ov <- OverlayTrack(
   list(dummyTrack, gmtrack, intret_splaiTrack, intretTrack), 
-  background.title = "#665990"
+  background.title = "#838383"
 )
 plotTracks(c(axTrack, ov), from = 985, to = 1155)
 
@@ -140,7 +139,7 @@ exdel_splaiTrack <- DataTrack(
   ylim = c(-1, 1), yTicksAt = c(-1, 0, 1),
   baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1.0,
   groups = c("AG", "AL", "DG", "DL"),
-  col = c("#6088C6", "#EF8875", "#49A190", "#ED8D49"), legend = FALSE, 
+  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49"), legend = FALSE, 
   size = 1
 )
 
@@ -169,7 +168,7 @@ partintret_splaiTrack <- DataTrack(
   ylim = c(-1, 1), yTicksAt = c(-1, 0, 1),
   baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1.0,
   groups = c("AG", "AL", "DG", "DL"),
-  col = c("#6088C6", "#EF8875", "#49A190", "#ED8D49"), legend = FALSE, 
+  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49"), legend = FALSE, 
   size = 1
 )
 
@@ -178,3 +177,4 @@ ov <- OverlayTrack(
   background.title = "#838383"
 )
 plotTracks(c(axTrack, ov), from = 985, to = 1155)
+
