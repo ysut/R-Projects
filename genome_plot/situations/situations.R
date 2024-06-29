@@ -16,8 +16,9 @@ axTrack <- GenomeAxisTrack(
 dummyscores <- read.xlsx("dummy_scores.xlsx")
 dummyTrack <- DataTrack(
   range = dummyscores, chromosome = chr, genome = gen, name="SpliceAI\n∆Score", 
-  background.title = "#F8ACAC", type = "histogram", ylim = c(-1, 1),
-  yTicksAt = c(-1.0, 0, 1.0), groups = c("AG", "AL", "DG", "DL"),
+  background.title = "#F8ACAC", type = "histogram", ylim = c(-1.2, 1.2),
+  yTicksAt = c(-1.0, 0, 1.0),
+  groups = c("AG", "AL", "DG", "DL"),
   col = c("#6088C6", "#EF8875", "#49A190", "#ED8D49"), legend = FALSE, 
   cex.title = 1.0, 
   fontsize = 10, cex.axis = 1.0, 
@@ -63,7 +64,6 @@ ov <- OverlayTrack(
 plotTracks(c(axTrack, ov), from = 985, to = 1155)
 
 
-
 #2. Exon skipping
 genemodel <- read.xlsx("02_exskip/model_base_skip.xlsx")
 gmtrack <- GeneRegionTrack(
@@ -81,8 +81,8 @@ exonskip_splaiTrack <- DataTrack(
   background.title = "#F8ACAC", type = "histogram", 
   ylim = c(-1, 1), yTicksAt = c(-1, 0, 1),
   baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1,
-  groups = c("AG", "AL", "DG", "DL"),
-  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49"), legend = FALSE, 
+  groups = c("AG", "AL", "DG", "DL", "Var"),,
+  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49", "black"), legend = FALSE, 
   size = 1
 )
 
@@ -110,8 +110,8 @@ intret_splaiTrack <- DataTrack(
   background.title = "#F8ACAC", type = "histogram", 
   ylim = c(-1, 1), yTicksAt = c(-1, 0, 1),
   baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1.0,
-  groups = c("AG", "AL", "DG", "DL"),
-  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49"), legend = FALSE, 
+  groups = c("AG", "AL", "DG", "DL", "Var"),
+  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49", "black"), legend = FALSE, 
   size = 1
 )
 
@@ -123,23 +123,26 @@ plotTracks(c(axTrack, ov), from = 985, to = 1155)
 
 #4. Partial exon deletion
 genemodel <- read.xlsx("04_partexdel/model_base_exdel.xlsx")
+genemodel <- read.xlsx("04_partexdel/model_base_exdel_2.xlsx")
 gmtrack <- GeneRegionTrack(
   genemodel, fill = "#383838",
   chromosome = chr, genome = "hg19", size = 0.1, alpha = 0.60)
 
 exdel <- read.xlsx("04_partexdel/model_exdel.xlsx")
+exdel <- read.xlsx("04_partexdel/model_exdel_2.xlsx")
 exdelTrack <- GeneRegionTrack(
   exdel, fill = "#383838",
   chromosome = chr, genome = "hg19", size = 0.3, alpha = 0.2)
 
 exdel_scores <- read.xlsx("04_partexdel/splai_part_exdel.xlsx")
+exdel_scores <- read.xlsx("04_partexdel/splai_part_exdel_2.xlsx")
 exdel_splaiTrack <- DataTrack(
   range = exdel_scores, chromosome = chr, genome = gen, name="SpliceAI ∆Score", 
   background.title = "#F8ACAC", type = "histogram", 
   ylim = c(-1, 1), yTicksAt = c(-1, 0, 1),
   baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1.0,
-  groups = c("AG", "AL", "DG", "DL"),
-  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49"), legend = FALSE, 
+  groups = c("AG", "AL", "DG", "DL", "Var"),
+  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49", "black"), legend = FALSE, 
   size = 1
 )
 
@@ -167,8 +170,8 @@ partintret_splaiTrack <- DataTrack(
   background.title = "#F8ACAC", type = "histogram", 
   ylim = c(-1, 1), yTicksAt = c(-1, 0, 1),
   baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1.0,
-  groups = c("AG", "AL", "DG", "DL"),
-  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49"), legend = FALSE, 
+  groups = c("AG", "AL", "DG", "DL", "Var"),
+  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49", "black"), legend = FALSE, 
   size = 1
 )
 
