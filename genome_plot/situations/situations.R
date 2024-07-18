@@ -82,7 +82,7 @@ exonskip_splaiTrack <- DataTrack(
   ylim = c(-1, 1), yTicksAt = c(-1, 0, 1),
   baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1,
   groups = c("AG", "AL", "DG", "DL", "Var"),,
-  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49", "black"), legend = FALSE, 
+  col = c("#4D4298", "#E60011", "#06A384", "#AB961D", "black"), legend = FALSE, 
   size = 1
 )
 
@@ -111,7 +111,7 @@ intret_splaiTrack <- DataTrack(
   ylim = c(-1, 1), yTicksAt = c(-1, 0, 1),
   baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1.0,
   groups = c("AG", "AL", "DG", "DL", "Var"),
-  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49", "black"), legend = FALSE, 
+  col = c("#4D4298", "#E60011", "#06A384", "#AB961D", "black"), legend = FALSE, 
   size = 1
 )
 
@@ -142,7 +142,7 @@ exdel_splaiTrack <- DataTrack(
   ylim = c(-1, 1), yTicksAt = c(-1, 0, 1),
   baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1.0,
   groups = c("AG", "AL", "DG", "DL", "Var"),
-  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49", "black"), legend = FALSE, 
+  col = c("#4D4298", "#E60011", "#06A384", "#AB961D", "black"), legend = FALSE, 
   size = 1
 )
 
@@ -171,7 +171,7 @@ partintret_splaiTrack <- DataTrack(
   ylim = c(-1, 1), yTicksAt = c(-1, 0, 1),
   baseline = 0, col.baseline = "#838383", lty.baseline = 1, lwd.baseline = 1.0,
   groups = c("AG", "AL", "DG", "DL", "Var"),
-  col = c("#6088C6", "#EE82EE", "#49A190", "#ED8D49", "black"), legend = FALSE, 
+  col = c("#4D4298", "#E60011", "#06A384", "#AB961D", "black"), legend = FALSE, 
   size = 1
 )
 
