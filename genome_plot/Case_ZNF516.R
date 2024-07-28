@@ -10,6 +10,9 @@ query <- ucscTableQuery(session, "Fix Patches")
 trackNames(query)
 tableNames(query)
 
+# Colors
+shiki <- c("#4D4298", "#E60011", "#06A384", "#AB961D")
+
 # Conncecting options 
 # options(Gviz.ucscUrl="http://genome-asia.ucsc.edu/cgi-bin/")
 
@@ -95,15 +98,16 @@ ht <- HighlightTrack(list(ucscTrack), alpha = 0.5, inBackground = FALSE,
   start = c(pos - 80, 74074450), width = c(160, 100)
 )
 
-# Wide view with highlighted variant position
-plotTracks(
-  list(iTrack, ht, axTrack), from = from - 22000, to = to + 1000)
-
 # ideogram
 iTrack <- IdeogramTrack(
   genome = gen, chromosome = chr, 
   cex = 1.2, bevel = 1, showId = FALSE, size = 0.3, cex.bands = 1.2
 )
+
+# Wide view with highlighted variant position
+plotTracks(
+  list(iTrack, ht, axTrack), from = from - 22000, to = to + 1000)
+
 
 ### 2nd wide
 # Highlight the variant position
@@ -166,7 +170,7 @@ splTrack <- DataTrack(
   baseline = 0, col.baseline = "#838383", lty.baseline = 2, lwd.baseline = 2,
   ylim = c(-1, 1), lwd.baseline = 2,
   yTicksAt = c(-1.0, -0.5,0 , 0.5, 1.0), groups = c("AG", "AL", "DG", "DL"),
-  col = c("#6088C6", "#EF8875", "#49A190", "#ED8D49"), legend = FALSE, 
+  col = shiki, legend = FALSE, 
   cex.legend = 2, cex.title = 1, fontsize = 12, cex.axis = 1, 
   size = 55
   )
